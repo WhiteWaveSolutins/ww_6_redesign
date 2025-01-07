@@ -102,7 +102,7 @@ class _PinCodeState extends State<PinCode> with SingleTickerProviderStateMixin {
       _currentIndex = 0;
       _pinNumbers.fillRange(0, 6, '');
     });
-    
+
     _animController
       ..reset()
       ..forward();
@@ -136,19 +136,19 @@ class _PinCodeState extends State<PinCode> with SingleTickerProviderStateMixin {
                   height: 16,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: isFilled ? AppGradients.primary : null,
+                    color: isFilled ? AppColors.primary : null,
                     border: Border.all(
                       color: _isError
                           ? AppColors.error
                           : (isFilled
                               ? Colors.transparent
-                              : AppColors.primaryGrad1.withOpacity(0.3)),
+                              : AppColors.primary.withOpacity(0.3)),
                       width: 2,
                     ),
                     boxShadow: isFilled
                         ? [
                             BoxShadow(
-                              color: AppColors.primaryGrad1.withOpacity(0.3),
+                              color: AppColors.primary.withOpacity(0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -210,7 +210,7 @@ class _PinCodeState extends State<PinCode> with SingleTickerProviderStateMixin {
                 color: AppColors.surfaceDark.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: AppColors.primaryGrad1.withOpacity(0.1),
+                  color: AppColors.primary.withOpacity(0.1),
                 ),
               ),
               child: Center(

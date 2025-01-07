@@ -247,23 +247,15 @@ class _OnboardingPageView extends StatelessWidget {
   }
 
   Widget _buildTitle() {
-    return ShaderMask(
-      shaderCallback: (bounds) => LinearGradient(
-        colors: [
-          page.color,
-          page.color.withOpacity(0.8),
-        ],
-      ).createShader(bounds),
-      child: Text(
-        page.title,
-        style: const TextStyle(
-          fontSize: 40,
-          height: 1.2,
-          fontWeight: FontWeight.bold,
-          color: CupertinoColors.white,
-        ),
-        textAlign: TextAlign.center,
+    return Text(
+      page.title,
+      style: const TextStyle(
+        fontSize: 40,
+        height: 1.2,
+        fontWeight: FontWeight.bold,
+        color: AppColors.textPrimary,
       ),
+      textAlign: TextAlign.center,
     );
   }
 

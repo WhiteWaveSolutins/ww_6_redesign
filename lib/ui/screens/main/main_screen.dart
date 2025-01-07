@@ -112,15 +112,7 @@ class _MainScreenState extends State<MainScreen>
             return _AnimatedSection(
               title: 'Folders',
               delay: 400.ms,
-              child: folders.isEmpty
-                  ? _buildEmptyState(
-                      icon: CupertinoIcons.folder_fill,
-                      title: 'No Folders Yet',
-                      subtitle:
-                          'Create your first folder to organize documents',
-                      color: AppColors.primaryGrad1,
-                    )
-                  : FoldersList(search: searchController.text),
+              child: FoldersList(search: searchController.text),
             );
           },
         ),
@@ -139,20 +131,14 @@ class _MainScreenState extends State<MainScreen>
               title: 'Recent Documents',
               delay: 600.ms,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildSortControl(),
                   const SizedBox(height: 16),
-                  documents.isEmpty
-                      ? _buildEmptyState(
-                          icon: CupertinoIcons.doc_fill,
-                          title: 'No Documents Yet',
-                          subtitle: 'Add your first document to get started',
-                          color: AppColors.info,
-                        )
-                      : DocumentsList(
-                          search: searchController.text,
-                          sortByDate: byDate,
-                        ),
+                  DocumentsList(
+                    search: searchController.text,
+                    sortByDate: byDate,
+                  ),
                 ],
               ),
             );

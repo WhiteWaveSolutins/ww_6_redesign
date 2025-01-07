@@ -149,7 +149,6 @@ class _FolderScreenState extends State<FolderScreen>
                   ),
                 ),
 
-                // Folder Icon and Name
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(

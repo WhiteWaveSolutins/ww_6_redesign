@@ -34,13 +34,6 @@ class DocumentsList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (folder == null)
-          Text(
-            'Other documents',
-            style: AppText.text2bold.copyWith(
-              color: Colors.white.withOpacity(.3),
-            ),
-          ),
         StoreConnector<AppState, DocumentListState>(
           converter: (store) => store.state.documentListState,
           builder: (context, state) {
@@ -72,10 +65,13 @@ class DocumentsList extends StatelessWidget {
                 children: [
                   if (folder != null) ...[
                     const SizedBox(height: 8),
-                    Text(
-                      '0 docs',
-                      style: AppText.text16.copyWith(
-                        color: Colors.white.withOpacity(.3),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        '0 docs',
+                        style: AppText.text16.copyWith(
+                          color: Colors.white.withOpacity(.3),
+                        ),
                       ),
                     ),
                   ],
@@ -317,7 +313,6 @@ class _EmptyStateWidgetState extends State<EmptyStateWidget>
   late Animation<double> _glowAnimation;
   late Animation<double> _bounceAnimation;
 
-  // Particles
   final List<ParticleModel> _particles = [];
   final Random _random = Random();
 
@@ -329,25 +324,21 @@ class _EmptyStateWidgetState extends State<EmptyStateWidget>
   }
 
   void _initializeAnimations() {
-    // Main controller for floating and scaling
     _mainController = AnimationController(
       duration: const Duration(seconds: 4),
       vsync: this,
     )..repeat(reverse: true);
 
-    // Rotation controller
     _rotationController = AnimationController(
       duration: const Duration(seconds: 8),
       vsync: this,
     )..repeat();
 
-    // Bounce controller
     _bounceController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat(reverse: true);
 
-    // Floating animation
     _floatAnimation = Tween<double>(
       begin: -12.0,
       end: 12.0,
@@ -356,7 +347,6 @@ class _EmptyStateWidgetState extends State<EmptyStateWidget>
       curve: Curves.easeInOut,
     ));
 
-    // Scale animation
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.1), weight: 50),
       TweenSequenceItem(tween: Tween(begin: 1.1, end: 1.0), weight: 50),
@@ -365,7 +355,6 @@ class _EmptyStateWidgetState extends State<EmptyStateWidget>
       curve: Curves.easeInOut,
     ));
 
-    // Rotation animation
     _rotationAnimation = Tween<double>(
       begin: 0,
       end: 2 * math.pi,
@@ -374,7 +363,6 @@ class _EmptyStateWidgetState extends State<EmptyStateWidget>
       curve: Curves.linear,
     ));
 
-    // Glow animation
     _glowAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 0.2, end: 0.6), weight: 50),
       TweenSequenceItem(tween: Tween(begin: 0.6, end: 0.2), weight: 50),
@@ -383,7 +371,6 @@ class _EmptyStateWidgetState extends State<EmptyStateWidget>
       curve: Curves.easeInOut,
     ));
 
-    // Bounce animation
     _bounceAnimation = CurvedAnimation(
       parent: _bounceController,
       curve: Curves.elasticOut,
@@ -410,158 +397,139 @@ class _EmptyStateWidgetState extends State<EmptyStateWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 32,
-              horizontal: 40,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.12),
-              borderRadius: BorderRadius.circular(32),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.2),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 120,
-                  width: 120,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Animated particles
-                      ...List.generate(_particles.length, (index) {
-                        return AnimatedBuilder(
-                          animation: _mainController,
-                          builder: (context, child) {
-                            final particle = _particles[index];
-                            final offset = Offset(
-                              math.cos(particle.angle) *
-                                  particle.radius *
-                                  _scaleAnimation.value,
-                              math.sin(particle.angle) *
-                                  particle.radius *
-                                  _scaleAnimation.value,
-                            );
-                            return Transform.translate(
-                              offset: offset,
-                              child: Opacity(
-                                opacity: _glowAnimation.value * 0.5,
-                                child: Container(
-                                  width: 4,
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: widget.isSearch
-                                            ? Colors.blue.withOpacity(0.5)
-                                            : Colors.purple.withOpacity(0.5),
-                                        blurRadius: 6,
-                                        spreadRadius: 1,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      }),
-                      // Main glow effect
-                      AnimatedBuilder(
-                        animation: _mainController,
-                        builder: (context, child) {
-                          return Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: (widget.isSearch
-                                          ? Colors.blue
-                                          : Colors.purple)
-                                      .withOpacity(_glowAnimation.value),
-                                  blurRadius: 30,
-                                  spreadRadius: 10,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      // Emoji with animations
-                      AnimatedBuilder(
-                        animation: Listenable.merge([
-                          _mainController,
-                          _rotationController,
-                          _bounceController,
-                        ]),
-                        builder: (context, child) {
-                          return Transform.translate(
-                            offset: Offset(0, _floatAnimation.value),
-                            child: Transform.rotate(
-                              angle: _rotationAnimation.value * 0.1,
-                              child: Transform.scale(
-                                scale: 1 + (_bounceAnimation.value * 0.1),
-                                child: Text(
-                                  widget.isSearch ? '🔍' : '📄',
-                                  style: const TextStyle(
-                                    fontSize: 48,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                AnimatedBuilder(
-                  animation: _bounceAnimation,
+    final primaryColor = widget.isSearch ? AppColors.info : AppColors.primary;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: 120,
+          width: 120,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              ...List.generate(_particles.length, (index) {
+                return AnimatedBuilder(
+                  animation: _mainController,
                   builder: (context, child) {
-                    return Transform.scale(
-                      scale: 1 + (_bounceAnimation.value * 0.05),
-                      child: Text(
-                        widget.customMessage ??
-                            (widget.isSearch
-                                ? 'Nothing found'
-                                : 'There are no documents here yet'),
-                        textAlign: TextAlign.center,
-                        style: AppText.small.copyWith(
-                          color: Colors.white.withOpacity(.8),
-                          fontSize: 16,
-                          height: 1.3,
-                          fontWeight: FontWeight.w500,
+                    final particle = _particles[index];
+                    final offset = Offset(
+                      math.cos(particle.angle) *
+                          particle.radius *
+                          _scaleAnimation.value,
+                      math.sin(particle.angle) *
+                          particle.radius *
+                          _scaleAnimation.value,
+                    );
+
+                    return Transform.translate(
+                      offset: offset,
+                      child: Opacity(
+                        opacity: _glowAnimation.value * 0.5,
+                        child: Container(
+                          width: 4,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: AppColors.textPrimary,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: primaryColor.withOpacity(0.5),
+                                blurRadius: 6,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
                   },
-                ),
-              ],
-            ),
+                );
+              }),
+
+              // Main glow effect
+              AnimatedBuilder(
+                animation: _mainController,
+                builder: (context, child) {
+                  return Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: primaryColor.withOpacity(_glowAnimation.value),
+                          blurRadius: 30,
+                          spreadRadius: 10,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+
+              // Icon with animations
+              AnimatedBuilder(
+                animation: Listenable.merge([
+                  _mainController,
+                  _rotationController,
+                  _bounceController,
+                ]),
+                builder: (context, child) {
+                  return Transform.translate(
+                    offset: Offset(0, _floatAnimation.value),
+                    child: Transform.rotate(
+                      angle: _rotationAnimation.value * 0.1,
+                      child: Transform.scale(
+                        scale: 1 + (_bounceAnimation.value * 0.1),
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: primaryColor.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: primaryColor.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Icon(
+                            widget.isSearch
+                                ? CupertinoIcons.search
+                                : CupertinoIcons.doc,
+                            color: primaryColor,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
-      ),
+
+        const SizedBox(height: 24),
+
+        // Message
+        const Text(
+          'No Documents Yet',
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Scan your first document',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: AppColors.textPrimary.withOpacity(0.7),
+            fontSize: 16,
+          ),
+        ),
+      ],
     );
   }
 }
