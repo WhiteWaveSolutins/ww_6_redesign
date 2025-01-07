@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:pro_image_editor/models/custom_widgets/custom_widgets.dart';
 import 'package:pro_image_editor/widgets/custom_widgets/reactive_custom_widget.dart';
 import 'package:scan_doc/ui/screens/costomize_document/costomize_document_screen.dart';

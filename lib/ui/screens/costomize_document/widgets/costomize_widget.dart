@@ -1,12 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:scan_doc/ui/resurses/text.dart';
-import 'package:scan_doc/ui/widgets/svg_icon.dart';
+import 'package:scan_doc/ui/resurses/colors.dart';
 
-class CostomizeWidget extends StatelessWidget {
-  final String icon;
+
+class CustomizeWidget extends StatelessWidget {
+  final IconData icon;
   final String title;
-
-  const CostomizeWidget({
+  
+  const CustomizeWidget({
     super.key,
     required this.title,
     required this.icon,
@@ -17,45 +19,75 @@ class CostomizeWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.white.withOpacity(.1),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: AppColors.surfaceDark.withOpacity(0.5),
+                border: Border.all(
+                  color: AppColors.textPrimary.withOpacity(0.1),
+                ),
+              ),
+              padding: const EdgeInsets.all(20),
+              child: Icon(
+                icon,
+                color: AppColors.textPrimary,
+                size: 20,
+              ),
+            ),
           ),
-          padding: const EdgeInsets.all(20),
-          child: SvgIcon(icon: icon),
         ),
         const SizedBox(height: 8),
         Text(
           title,
-          style: AppText.small,
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ],
     );
   }
 }
 
-class ConsomizeIcon extends StatelessWidget {
-  final String icon;
-
-  const ConsomizeIcon({
+class CustomizeIcon extends StatelessWidget {
+  final IconData icon;
+  
+  const CustomizeIcon({
     super.key,
     required this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.white.withOpacity(.1),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: AppColors.surfaceDark.withOpacity(0.5),
+            border: Border.all(
+              color: AppColors.textPrimary.withOpacity(0.1),
+            ),
+          ),
+          padding: const EdgeInsets.all(20),
+          child: Icon(
+            icon,
+            color: AppColors.textPrimary,
+            size: 20,
+          ),
+        ),
       ),
-      padding: const EdgeInsets.all(20),
-      child: SvgIcon(icon: icon),
     );
   }
 }

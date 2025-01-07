@@ -1,15 +1,13 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
-import 'package:scan_doc/ui/resurses/icons.dart';
-import 'package:scan_doc/ui/resurses/text.dart';
-import 'package:scan_doc/ui/widgets/gradient_widget.dart';
-import 'package:scan_doc/ui/widgets/svg_icon.dart';
 
 class DocumentsColumns extends StatefulWidget {
   final List<String> images;
@@ -48,52 +46,16 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
           child: CarouselSlider(
             items: [
               for (var image in widget.images)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    width: 370,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Image.memory(
-                      File(image).readAsBytesSync(),
-                    ),
-                  ),
-                ),
+                _buildImageItem(image),
               if (widget.isEdit)
-                CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: widget.onAdd,
-                  child: Container(
-                    width: 370,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: AppColors.primaryGrad1,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.white.withOpacity(.1),
-                        ),
-                        padding: const EdgeInsets.all(30),
-                        child: GradientWidget.primary(
-                          const Icon(CupertinoIcons.plus),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                _buildAddButton(),
             ],
             options: CarouselOptions(
               height: double.infinity,
               initialPage: 0,
               enableInfiniteScroll: false,
+              enlargeCenterPage: true,
+              enlargeFactor: 0.3,
               onPageChanged: (index, _) {
                 Gaimon.selection();
                 setState(() => selectedIndex = index);
@@ -103,27 +65,7 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
           ),
         ),
         const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(width: 10),
-              Text(
-                widget.nameDoc,
-                style: AppText.text16,
-              ),
-              Opacity(
-                opacity: widget.isEdit ? 1 : 0,
-                child: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: widget.isEdit ? widget.onRename : null,
-                  child: const SvgIcon(icon: AppIcons.edit),
-                ),
-              ),
-            ],
-          ),
-        ),
+        _buildDocumentInfo(),
         const SizedBox(height: 20),
         if (widget.isEdit)
           Opacity(
@@ -139,9 +81,159 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
                 setState(() {});
               },
             ),
-          ),
+          ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
       ],
     );
+  }
+
+  Widget _buildImageItem(String image) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: 370,
+          decoration: BoxDecoration(
+            color: AppColors.surfaceDark.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: AppColors.textPrimary.withOpacity(0.1),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.surfaceDark.withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.memory(
+              File(image).readAsBytesSync(),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+    ).animate().fadeIn(duration: 400.ms).scale(
+      begin: const Offset(0.8, 0.8),
+      end: const Offset(1.0, 1.0),
+      curve: Curves.easeOutBack,
+    );
+  }
+
+  Widget _buildAddButton() {
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: widget.onAdd,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            width: 370,
+            decoration: BoxDecoration(
+              color: AppColors.surfaceDark.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.primary.withOpacity(0.3),
+              ),
+            ),
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: AppColors.primary,
+                    width: 2,
+                  ),
+                ),
+                padding: const EdgeInsets.all(30),
+                child: const Icon(
+                  CupertinoIcons.plus,
+                  color: AppColors.primary,
+                  size: 30,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ).animate().fadeIn(delay: 200.ms).scale(
+      begin: const Offset(0.8, 0.8),
+      end: const Offset(1.0, 1.0),
+      curve: Curves.easeOutBack,
+    );
+  }
+
+  Widget _buildDocumentInfo() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceDark.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppColors.textPrimary.withOpacity(0.1),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      CupertinoIcons.doc_fill,
+                      color: AppColors.primary,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    widget.nameDoc,
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              Opacity(
+                opacity: widget.isEdit ? 1 : 0,
+                child: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: widget.isEdit ? widget.onRename : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      CupertinoIcons.pencil,
+                      color: AppColors.primary,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.2, end: 0);
   }
 }
 
@@ -151,7 +243,6 @@ class _Buttons extends StatelessWidget {
   final Function() onEdit;
 
   const _Buttons({
-    super.key,
     required this.onDelete,
     required this.onReplace,
     required this.onEdit,
@@ -162,48 +253,51 @@ class _Buttons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CupertinoButton(
-          padding: EdgeInsets.zero,
+        _buildActionButton(
           onPressed: onReplace,
-          child: Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.all(20),
-            child: const SvgIcon(
-              icon: AppIcons.retry,
-            ),
-          ),
+          icon: CupertinoIcons.arrow_2_circlepath,
+          color: AppColors.primary,
         ),
-        const SizedBox(width: 8),
-        CupertinoButton(
-          padding: EdgeInsets.zero,
+        const SizedBox(width: 12),
+        _buildActionButton(
           onPressed: onEdit,
-          child: Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.all(20),
-            child: const SvgIcon(
-              icon: AppIcons.edit,
-            ),
-          ),
+          icon: CupertinoIcons.pencil,
+          color: AppColors.info,
         ),
-        const SizedBox(width: 8),
-        CupertinoButton(
-          padding: EdgeInsets.zero,
+        const SizedBox(width: 12),
+        _buildActionButton(
           onPressed: onDelete,
-          child: const SvgIcon(
-            icon: AppIcons.basketFill,
-          ),
+          icon: CupertinoIcons.delete,
+          color: AppColors.error,
         ),
       ],
+    );
+  }
+
+  Widget _buildActionButton({
+    required VoidCallback onPressed,
+    required IconData icon,
+    required Color color,
+  }) {
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: onPressed,
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+            color: color.withOpacity(0.3),
+          ),
+        ),
+        child: Icon(
+          icon,
+          color: color,
+          size: 20,
+        ),
+      ),
     );
   }
 }

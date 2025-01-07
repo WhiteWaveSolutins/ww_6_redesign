@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
 
 class AppBarCosomize extends StatelessWidget {
   final Function() onClose;
@@ -26,9 +26,9 @@ class AppBarCosomize extends StatelessWidget {
               height: 60,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Colors.white.withOpacity(.1),
+                color: CupertinoColors.white.withOpacity(.1),
               ),
-              child: const Icon(Icons.clear),
+              child: const Icon(CupertinoIcons.clear),
             ),
           ),
           CupertinoButton(
@@ -39,9 +39,9 @@ class AppBarCosomize extends StatelessWidget {
               height: 60,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Colors.white.withOpacity(.1),
+                color: CupertinoColors.white.withOpacity(.1),
               ),
-              child: const Icon(Icons.check),
+              child: const Icon(CupertinoIcons.search),
             ),
           ),
         ],

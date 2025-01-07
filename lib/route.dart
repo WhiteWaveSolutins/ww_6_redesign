@@ -30,7 +30,7 @@ class AppRoutes {
     final routes = <String, WidgetBuilder>{
       AppRoutes.main: (BuildContext context) => const BottomTabBar(),
       AppRoutes.infoPassword: (BuildContext context) => InfoPasswordScreen(onOpen: arg!.function!),
-      AppRoutes.costomizeDocument: (BuildContext context) => CostomizeDocumentScreen(
+      AppRoutes.costomizeDocument: (BuildContext context) => CustomizeDocumentScreen(
             image: arg!.image!,
           ),
       AppRoutes.document: (BuildContext context) => DocumentScreen(document: arg!.document!),

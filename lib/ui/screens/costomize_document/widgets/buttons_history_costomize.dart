@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
 import 'package:scan_doc/ui/widgets/svg_icon.dart';
 
@@ -29,7 +29,7 @@ class ButtonsHistoryCostomize extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: Colors.black.withOpacity(.2),
+                color: CupertinoColors.black.withOpacity(.2),
               ),
               padding: const EdgeInsets.symmetric(
                 vertical: 7,
@@ -46,7 +46,7 @@ class ButtonsHistoryCostomize extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: Colors.black.withOpacity(.2),
+                color: CupertinoColors.black.withOpacity(.2),
               ),
               padding: const EdgeInsets.symmetric(
                 vertical: 7,

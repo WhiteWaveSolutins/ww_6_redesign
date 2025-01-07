@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:scan_doc/ui/resurses/images.dart';
 
 class StickerEditorWidget extends StatelessWidget {
@@ -14,7 +13,7 @@ class StickerEditorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(.5),
+        color: CupertinoColors.black.withOpacity(.5),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
@@ -45,7 +44,7 @@ class StickerEditorWidget extends StatelessWidget {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(.3),
+                  color: CupertinoColors.white.withOpacity(.3),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Image.asset(
