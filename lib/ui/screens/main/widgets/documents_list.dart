@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -87,10 +86,13 @@ class DocumentsList extends StatelessWidget {
               children: [
                 if (folder != null) ...[
                   const SizedBox(height: 8),
-                  Text(
-                    '${documents.length} docs',
-                    style: AppText.text16.copyWith(
-                      color: Colors.white.withOpacity(.3),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      '${documents.length} docs',
+                      style: AppText.text16.copyWith(
+                        color: Colors.white.withOpacity(.3),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 18),

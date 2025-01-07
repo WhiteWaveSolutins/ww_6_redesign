@@ -13,10 +13,6 @@ import 'package:scan_doc/ui/screens/costomize_document/widgets/crop_editor.dart'
 import 'package:scan_doc/ui/screens/costomize_document/widgets/filter_editor.dart';
 import 'package:scan_doc/ui/screens/costomize_document/widgets/sticker_editor.dart';
 
-import 'package:flutter/cupertino.dart';
-import 'dart:ui';
-import 'dart:io';
-import 'dart:typed_data';
 
 class CustomizeDocumentScreen extends StatelessWidget {
   final String image;

@@ -84,8 +84,9 @@ class _FolderScreenState extends State<FolderScreen>
             ),
             CupertinoDialogAction(
               onPressed: () {
-                getItService.folderUseCase.deleteFolder(folderId: folder.id);
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                getItService.folderUseCase.deleteFolder(folderId: folder.id);
               },
               isDestructiveAction: true,
               child: const Text(

@@ -18,7 +18,7 @@ import 'package:path/path.dart' as p;
 
 class DocumentScreen extends StatefulWidget {
   final Document document;
-  
+
   const DocumentScreen({
     super.key,
     required this.document,
@@ -84,13 +84,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
   }
 
   void onRename() {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      constraints: BoxConstraints(
-        minHeight: 100,
-        maxHeight: MediaQuery.of(context).size.height - 100,
-      ),
-      backgroundColor: Colors.transparent,
+    showCupertinoModalPopup(
       context: context,
       builder: (context) => RenameModal(
         name: name,
@@ -184,11 +178,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
             // Header
             Padding(
               padding: const EdgeInsets.all(16),
-              child: isDeleting
-                  ? _buildDeleteButton()
-                  : _buildHeader(),
+              child: isDeleting ? _buildDeleteButton() : _buildHeader(),
             ),
-            
+
             // Content
             Expanded(
               child: isColumn
@@ -268,7 +260,6 @@ class _DocumentScreenState extends State<DocumentScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Close Button
             CupertinoButton(
               padding: EdgeInsets.zero,
               onPressed: onClose,
@@ -288,7 +279,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
                 ),
               ),
             ),
-            
+
             // Save Button
             CupertinoButton(
               padding: EdgeInsets.zero,

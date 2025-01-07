@@ -11,7 +11,6 @@ import 'package:scan_doc/ui/resurses/colors.dart';
 
 import 'package:url_launcher/url_launcher_string.dart';
 
-
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -19,7 +18,8 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProviderStateMixin {
+class _SettingsScreenState extends State<SettingsScreen>
+    with SingleTickerProviderStateMixin {
   final _configService = getItService.configService;
   late AnimationController _animController;
 
@@ -49,89 +49,115 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 40, bottom: 40),
-                child: _buildAnimatedHeader(),
-              ).animate()
-               .fadeIn(duration: 800.ms)
-               .scale(
-                 begin: const Offset(0.8, 0.8),
-                 end: const Offset(1.0, 1.0),
-                 curve: Curves.easeOutBack,
-               ),
+              child: const Padding(
+                padding: EdgeInsets.all(20),
+                child: _AnimatedHeaderText(
+                  title: 'Settings',
+                  subtitle: 'All your files in one place',
+                ),
+              ).animate().fadeIn(duration: 800.ms).scale(
+                    begin: const Offset(0.8, 0.8),
+                    end: const Offset(1.0, 1.0),
+                    curve: Curves.easeOutBack,
+                  ),
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  _buildSettingsGroup(
-                    title: 'Security',
-                    items: [
-                      _buildSettingsTile(
-                        icon: CupertinoIcons.lock_shield_fill,
-                        title: 'Password',
-                        color: AppColors.info,
-                        onTap: () => getItService.navigatorService.onInfoPassword(
-                          onOpen: getItService.navigatorService.onSettingPassword,
-                        ),
-                      ),
-                    ],
-                  ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
-                  const SizedBox(height: 16),
-                  _buildSettingsGroup(
-                    title: 'Legal',
-                    items: [
-                      _buildSettingsTile(
-                        icon: CupertinoIcons.doc_text_fill,
-                        title: 'Terms of Use',
-                        color: AppColors.success,
-                        onTap: () => launchUrlString(_configService.termsLink),
-                      ),
-                      _buildSettingsTile(
-                        icon: CupertinoIcons.shield_fill,
-                        title: 'Privacy Policy',
-                        color: AppColors.secondary,
-                        onTap: () => launchUrlString(_configService.privacyLink),
-                      ),
-                    ],
-                  ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2, end: 0),
-                  const SizedBox(height: 16),
-                  _buildSettingsGroup(
-                    title: 'About',
-                    items: [
-                      _buildSettingsTile(
-                        icon: CupertinoIcons.info_circle_fill,
-                        title: 'Version',
-                        color: AppColors.warning,
-                        trailing: Text(
-                          '${version.major}.${version.minor}.${version.patch}',
-                          style: const TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 15,
+                delegate: SliverChildListDelegate(
+                  [
+                    _buildSettingsGroup(
+                      title: 'Security',
+                      items: [
+                        _buildSettingsTile(
+                          icon: CupertinoIcons.lock_shield_fill,
+                          title: 'Password',
+                          color: AppColors.info,
+                          onTap: () =>
+                              getItService.navigatorService.onInfoPassword(
+                            onOpen:
+                                getItService.navigatorService.onSettingPassword,
                           ),
                         ),
-                      ),
-                      _buildSettingsTile(
-                        icon: CupertinoIcons.question_circle_fill,
-                        title: 'Support',
-                        color: AppColors.primaryGrad1,
-                        onTap: () => FlutterEmailSender.send(Email(
-                          recipients: ['support@example.com'],
-                          subject: 'Support Request',
-                          body: 'Hello, I need help with...',
-                        )),
-                      ),
-                      _buildSettingsTile(
-                        icon: CupertinoIcons.star_fill,
-                        title: 'Rate us',
-                        color: AppColors.accentGrad1,
-                        onTap: () => InAppReview.instance.requestReview(),
-                      ),
-                    ],
-                  ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.2, end: 0),
-                  const SizedBox(height: 24),
-                ]),
+                      ],
+                    )
+                        .animate()
+                        .fadeIn(delay: 200.ms)
+                        .slideY(begin: 0.2, end: 0),
+                    const SizedBox(height: 16),
+                    _buildSettingsGroup(
+                      title: 'Legal',
+                      items: [
+                        _buildSettingsTile(
+                          icon: CupertinoIcons.doc_text_fill,
+                          title: 'Terms of Use',
+                          color: AppColors.success,
+                          onTap: () =>
+                              launchUrlString(_configService.termsLink),
+                        ),
+                        _buildSettingsTile(
+                          icon: CupertinoIcons.shield_fill,
+                          title: 'Privacy Policy',
+                          color: AppColors.secondary,
+                          onTap: () =>
+                              launchUrlString(_configService.privacyLink),
+                        ),
+                      ],
+                    )
+                        .animate()
+                        .fadeIn(delay: 400.ms)
+                        .slideY(begin: 0.2, end: 0),
+                    const SizedBox(height: 16),
+                    _buildSettingsGroup(
+                      title: 'About',
+                      items: [
+                        _buildSettingsTile(
+                          icon: CupertinoIcons.info_circle_fill,
+                          title: 'Version',
+                          color: AppColors.warning,
+                          trailing: Text(
+                            '${version.major}.${version.minor}.${version.patch}',
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        _buildSettingsTile(
+                          icon: CupertinoIcons.question_circle_fill,
+                          title: 'Support',
+                          color: AppColors.primaryGrad1,
+                          onTap: () => FlutterEmailSender.send(Email(
+                            recipients: ['support@example.com'],
+                            subject: 'Support Request',
+                            body: 'Hello, I need help with...',
+                          )),
+                        ),
+                        _buildSettingsTile(
+                          icon: CupertinoIcons.star_fill,
+                          title: 'Rate us',
+                          color: AppColors.accentGrad1,
+                          onTap: () => InAppReview.instance.requestReview(),
+                        ),
+                      ],
+                    )
+                        .animate()
+                        .fadeIn(delay: 600.ms)
+                        .slideY(begin: 0.2, end: 0),
+                    const SizedBox(height: 24),
+                  ],
+                ),
               ),
+            ),
+            SliverToBoxAdapter(
+              child: _buildAnimatedHeader()
+                  .animate()
+                  .fadeIn(duration: 800.ms)
+                  .scale(
+                    begin: const Offset(0.8, 0.8),
+                    end: const Offset(1.0, 1.0),
+                    curve: Curves.easeOutBack,
+                  ),
             ),
           ],
         ),
@@ -157,26 +183,30 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
               ),
             ],
           ),
-        ).animate(
-          onPlay: (controller) => controller.repeat(reverse: true),
-        ).scale(
-          duration: 2.seconds,
-          begin: const Offset(0.95, 0.95),
-          end: const Offset(1.0, 1.0),
-          curve: Curves.easeInOut,
-        ),
+        )
+            .animate(
+              onPlay: (controller) => controller.repeat(reverse: true),
+            )
+            .scale(
+              duration: 2.seconds,
+              begin: const Offset(0.95, 0.95),
+              end: const Offset(1.0, 1.0),
+              curve: Curves.easeInOut,
+            ),
         const Icon(
           CupertinoIcons.settings,
           color: AppColors.surfaceLight,
           size: 40,
-        ).animate(
-          onPlay: (controller) => controller.repeat(period: 3.seconds),
-        ).rotate(
-          duration: 3.seconds,
-          begin: 0,
-          end: 2,
-          curve: Curves.easeInOutCubic,
-        ),
+        )
+            .animate(
+              onPlay: (controller) => controller.repeat(period: 3.seconds),
+            )
+            .rotate(
+              duration: 3.seconds,
+              begin: 0,
+              end: 2,
+              curve: Curves.easeInOutCubic,
+            ),
       ],
     );
   }
@@ -302,6 +332,34 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
           ],
         ),
       ),
+    );
+  }
+}
+
+class _AnimatedHeaderText extends StatelessWidget {
+  final String title;
+  final String subtitle;
+
+  const _AnimatedHeaderText({
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 40,
+            height: 1.2,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+        ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.2, end: 0),
+      ],
     );
   }
 }
