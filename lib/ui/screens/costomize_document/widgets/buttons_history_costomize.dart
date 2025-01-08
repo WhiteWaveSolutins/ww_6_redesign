@@ -20,7 +20,6 @@ class ButtonsHistoryCostomize extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 10),
-      width: MediaQuery.of(context).size.width - 25,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

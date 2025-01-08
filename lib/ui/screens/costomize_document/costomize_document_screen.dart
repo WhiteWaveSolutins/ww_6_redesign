@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 
@@ -12,7 +13,6 @@ import 'package:scan_doc/ui/screens/costomize_document/widgets/costomize_widget.
 import 'package:scan_doc/ui/screens/costomize_document/widgets/crop_editor.dart';
 import 'package:scan_doc/ui/screens/costomize_document/widgets/filter_editor.dart';
 import 'package:scan_doc/ui/screens/costomize_document/widgets/sticker_editor.dart';
-
 
 class CustomizeDocumentScreen extends StatelessWidget {
   final String image;
@@ -24,91 +24,84 @@ class CustomizeDocumentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      theme: const CupertinoThemeData(
-        brightness: Brightness.dark,
-        primaryColor: AppColors.primary,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: CupertinoPageScaffold(
-        backgroundColor: AppColors.backgroundDark,
-        child: ProImageEditor.file(
-          File(image),
-          imageBack: AppImages.mainBack,
-          callbacks: ProImageEditorCallbacks(
-            onImageEditingComplete: (Uint8List bytes) async {
-              final file = File(image);
-              await file.writeAsBytes(bytes);
-              Navigator.of(context).pop(file.path);
-            },
+    return Scaffold(
+      backgroundColor: AppColors.backgroundDark,
+      body: ProImageEditor.file(
+        File(image),
+        imageBack: AppImages.mainBack,
+        callbacks: ProImageEditorCallbacks(
+          onImageEditingComplete: (Uint8List bytes) async {
+            final file = File(image);
+            await file.writeAsBytes(bytes);
+            Navigator.of(context).pop(file.path);
+          },
+        ),
+        buttonsHistory: (onPrev, onNext, activePrev, activeNext) =>
+            ButtonsHistoryCustomize(
+          onNext: onNext,
+          onPrev: onPrev,
+          activeNext: activeNext,
+          activePrev: activePrev,
+        ),
+        bottomNavigationBarHeight: 125,
+        bottomNavigationBarButtonsHeight: 90,
+        appBarWidget: (onClose, onFinish) => PreferredSize(
+          preferredSize: const Size.fromHeight(44),
+          child: AppBarCustomize(
+            onClose: onClose,
+            onFinish: onFinish,
           ),
-          buttonsHistory: (onPrev, onNext, activePrev, activeNext) =>
-              ButtonsHistoryCustomize(
-                onNext: onNext,
-                onPrev: onPrev,
-                activeNext: activeNext,
-                activePrev: activePrev,
-              ),
-          bottomNavigationBarHeight: 125,
-          bottomNavigationBarButtonsHeight: 90,
-          appBarWidget: (onClose, onFinish) => PreferredSize(
-            preferredSize: const Size.fromHeight(44),
-            child: AppBarCustomize(
-              onClose: onClose,
-              onFinish: onFinish,
+        ),
+        appBarWidgetCrop: const CustomizeWidget(
+          title: 'Cut',
+          icon: CupertinoIcons.scissors,
+        ),
+        bottomTextStyle: const TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+        ),
+        configs: ProImageEditorConfigs(
+          tuneEditorConfigs: const TuneEditorConfigs(enabled: false),
+          blurEditorConfigs: const BlurEditorConfigs(enabled: false),
+          emojiEditorConfigs: const EmojiEditorConfigs(enabled: false),
+          stickerEditorConfigs: StickerEditorConfigs(
+            enabled: true,
+            buildStickers: (Function(Widget) setLayer) => StickerEditorWidget(
+              setLayer: setLayer,
             ),
           ),
-          appBarWidgetCrop: const CustomizeWidget(
-            title: 'Cut',
-            icon: CupertinoIcons.scissors,
+          filterEditorConfigs: const FilterEditorConfigs(),
+          icons: ImageEditorIcons(
+            stickerEditor: IconsStickerEditor(
+              bottomNavBar: _buildEditorButton(
+                icon: CupertinoIcons.smiley,
+              ),
+            ),
+            cropRotateEditor: IconsCropRotateEditor(
+              bottomNavBar: _buildEditorButton(
+                icon: CupertinoIcons.crop,
+              ),
+            ),
+            filterEditor: IconsFilterEditor(
+              bottomNavBar: _buildEditorButton(
+                icon: CupertinoIcons.wand_rays,
+              ),
+            ),
+            textEditor: IconsTextEditor(
+              bottomNavBar: _buildEditorButton(
+                icon: CupertinoIcons.text_cursor,
+              ),
+            ),
+            paintingEditor: IconsPaintingEditor(
+              bottomNavBar: _buildEditorButton(
+                icon: CupertinoIcons.paintbrush_fill,
+              ),
+            ),
           ),
-          bottomTextStyle: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-          configs: ProImageEditorConfigs(
-            tuneEditorConfigs: const TuneEditorConfigs(enabled: false),
-            blurEditorConfigs: const BlurEditorConfigs(enabled: false),
-            emojiEditorConfigs: const EmojiEditorConfigs(enabled: false),
-            stickerEditorConfigs: StickerEditorConfigs(
-              enabled: true,
-              buildStickers: (Function(Widget) setLayer) => StickerEditorWidget(
-                setLayer: setLayer,
-              ),
-            ),
-            filterEditorConfigs: const FilterEditorConfigs(),
-            icons: ImageEditorIcons(
-              stickerEditor: IconsStickerEditor(
-                bottomNavBar: _buildEditorButton(
-                  icon: CupertinoIcons.smiley,
-                ),
-              ),
-              cropRotateEditor: IconsCropRotateEditor(
-                bottomNavBar: _buildEditorButton(
-                  icon: CupertinoIcons.crop,
-                ),
-              ),
-              filterEditor: IconsFilterEditor(
-                bottomNavBar: _buildEditorButton(
-                  icon: CupertinoIcons.wand_rays,
-                ),
-              ),
-              textEditor: IconsTextEditor(
-                bottomNavBar: _buildEditorButton(
-                  icon: CupertinoIcons.text_cursor,
-                ),
-              ),
-              paintingEditor: IconsPaintingEditor(
-                bottomNavBar: _buildEditorButton(
-                  icon: CupertinoIcons.paintbrush_fill,
-                ),
-              ),
-            ),
-            customWidgets: ImageEditorCustomWidgets(
-              filterEditor: appFilerEditor,
-              cropRotateEditor: cropEditor,
-            ),
+          customWidgets: ImageEditorCustomWidgets(
+            filterEditor: appFilerEditor,
+            cropRotateEditor: cropEditor,
           ),
         ),
       ),
@@ -147,12 +140,14 @@ class CustomizeButton extends StatelessWidget {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: isActive ? AppColors.primary : AppColors.surfaceDark.withOpacity(0.5),
+              color: isActive
+                  ? AppColors.primary
+                  : AppColors.surfaceDark.withOpacity(0.5),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isActive 
-                  ? AppColors.primary.withOpacity(0.3)
-                  : AppColors.textPrimary.withOpacity(0.1),
+                color: isActive
+                    ? AppColors.primary.withOpacity(0.3)
+                    : AppColors.textPrimary.withOpacity(0.1),
               ),
             ),
             child: Icon(
