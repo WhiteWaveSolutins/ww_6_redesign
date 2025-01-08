@@ -1,13 +1,10 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:scan_doc/domain/di/locator.dart';
 import 'package:scan_doc/route.dart';
-import 'package:scan_doc/ui/resurses/theme.dart';
-import 'package:scan_doc/ui/screens/onboarding/onboarding_screen.dart';
 import 'package:scan_doc/ui/screens/splash/splash_screen.dart';
 import 'package:scan_doc/ui/state_manager/store.dart';
 import 'package:talker/talker.dart';
@@ -26,7 +23,7 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() async {
   final bindings = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: bindings);
+  FlutterNativeSplash.preserve(widgetsBinding: bindings);
   HttpOverrides.global = MyHttpOverrides();
   final locator = LocatorService();
   await locator.configService.init();
@@ -67,7 +64,7 @@ class PDFScanner extends StatelessWidget {
         store: locator.store,
         child: CupertinoApp(
           navigatorKey: locator.navigatorKey,
-          home: const OnboardingScreen(),
+          home: const SplashScreen(),
           debugShowCheckedModeBanner: false,
           title: 'PDFScanSmart',
           onGenerateRoute: AppRoutes.onGenerateRoute,
