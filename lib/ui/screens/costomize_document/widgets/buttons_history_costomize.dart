@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
 import 'package:scan_doc/ui/widgets/svg_icon.dart';
 

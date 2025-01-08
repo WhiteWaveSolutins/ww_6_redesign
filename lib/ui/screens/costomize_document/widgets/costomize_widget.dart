@@ -1,6 +1,7 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
+
+import 'package:flutter/material.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 
 
@@ -16,42 +17,44 @@ class CustomizeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: AppColors.surfaceDark.withOpacity(0.5),
-                border: Border.all(
-                  color: AppColors.textPrimary.withOpacity(0.1),
+    return Material(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: AppColors.surfaceDark.withOpacity(0.5),
+                  border: Border.all(
+                    color: AppColors.textPrimary.withOpacity(0.1),
+                  ),
                 ),
-              ),
-              padding: const EdgeInsets.all(20),
-              child: Icon(
-                icon,
-                color: AppColors.textPrimary,
-                size: 20,
+                padding: const EdgeInsets.all(20),
+                child: Icon(
+                  icon,
+                  color: AppColors.textPrimary,
+                  size: 20,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          title,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

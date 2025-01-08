@@ -102,8 +102,9 @@ class _AddDocumentInFolderModalState extends State<AddDocumentInFolderModal> {
                         ),
                         itemCount: state.folders.length + 1,
                         itemBuilder: (context, index) {
-                          if (index == state.folders.length)
+                          if (index == state.folders.length) {
                             return const _Add();
+                          }
                           return CupertinoButton(
                             padding: EdgeInsets.zero,
                             onPressed: () {
@@ -126,12 +127,7 @@ class _AddDocumentInFolderModalState extends State<AddDocumentInFolderModal> {
                                     height: 20,
                                     decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          AppColors.primaryGrad1,
-                                          AppColors.primaryGrad2,
-                                        ],
-                                      ),
+                                      color: AppColors.primary, 
                                     ),
                                     child: const Center(
                                       child: Icon(
@@ -162,12 +158,7 @@ class _AddDocumentInFolderModalState extends State<AddDocumentInFolderModal> {
                   height: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    gradient: const LinearGradient(
-                      colors: [
-                        AppColors.primaryGrad1,
-                        AppColors.primaryGrad2,
-                      ],
-                    ),
+                    color: AppColors.primary
                   ),
                   child: isLoading
                       ? const Center(

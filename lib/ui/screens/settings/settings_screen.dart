@@ -149,65 +149,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: _buildAnimatedHeader()
-                  .animate()
-                  .fadeIn(duration: 800.ms)
-                  .scale(
-                    begin: const Offset(0.8, 0.8),
-                    end: const Offset(1.0, 1.0),
-                    curve: Curves.easeOutBack,
-                  ),
-            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildAnimatedHeader() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          width: 100,
-          height: 100,
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withOpacity(0.3),
-                blurRadius: 30,
-                spreadRadius: 5,
-              ),
-            ],
-          ),
-        )
-            .animate(
-              onPlay: (controller) => controller.repeat(reverse: true),
-            )
-            .scale(
-              duration: 2.seconds,
-              begin: const Offset(0.95, 0.95),
-              end: const Offset(1.0, 1.0),
-              curve: Curves.easeInOut,
-            ),
-        const Icon(
-          CupertinoIcons.settings,
-          color: AppColors.surfaceLight,
-          size: 40,
-        )
-            .animate(
-              onPlay: (controller) => controller.repeat(period: 3.seconds),
-            )
-            .rotate(
-              duration: 3.seconds,
-              begin: 0,
-              end: 2,
-              curve: Curves.easeInOutCubic,
-            ),
-      ],
     );
   }
 

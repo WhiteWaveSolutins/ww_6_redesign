@@ -124,15 +124,8 @@ class _AddFolderModalState extends State<AddFolderModal> {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      gradient: AppGradients.primary,
+                     color: AppColors.primary,
                       borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primaryGrad1.withOpacity(0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
                     ),
                     child: isLoading
                         ? const CupertinoActivityIndicator(
@@ -263,7 +256,7 @@ class _AddFolderModalState extends State<AddFolderModal> {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  gradient: AppGradients.primary,
+                                 color: AppColors.primary,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Icon(
@@ -289,7 +282,8 @@ class _AddFolderModalState extends State<AddFolderModal> {
                             value: usePassword,
                             onChanged: (_) async {
                               if (!usePassword) {
-                                final password = await SharedPreferencesService.getPassword();
+                                final password = await SharedPreferencesService
+                                    .getPassword();
                                 if (password == null) {
                                   getItService.navigatorService.onInfoPassword(
                                     onOpen: () {

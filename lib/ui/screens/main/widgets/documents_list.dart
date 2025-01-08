@@ -281,8 +281,10 @@ class _State extends StatelessWidget {
             child: CupertinoActivityIndicator(color: Colors.white),
           )
         else
-          EmptyStateWidget(
-            isSearch: isSearch,
+          Center(
+            child: EmptyStateWidget(
+              isSearch: isSearch,
+            ),
           ),
         const SizedBox(height: 180),
       ],

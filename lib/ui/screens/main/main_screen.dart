@@ -13,6 +13,7 @@ import 'package:scan_doc/ui/screens/main/widgets/folders_list.dart';
 import 'package:scan_doc/ui/state_manager/document/action.dart';
 import 'package:scan_doc/ui/state_manager/folder/action.dart';
 import 'package:scan_doc/ui/state_manager/store.dart';
+import 'package:scan_doc/ui/widgets/modal/add_folder_modal.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -111,6 +112,13 @@ class _MainScreenState extends State<MainScreen>
           builder: (context, folders) {
             return _AnimatedSection(
               title: 'Folders',
+              isFolderSection: true,
+              addFolder: () {
+                showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) => const AddFolderModal(),
+                );
+              },
               delay: 400.ms,
               child: FoldersList(search: searchController.text),
             );
@@ -374,11 +382,15 @@ class _AnimatedSection extends StatelessWidget {
   final String title;
   final Widget child;
   final Duration delay;
+  final bool isFolderSection;
+  final VoidCallback? addFolder;
 
   const _AnimatedSection({
     required this.title,
     required this.child,
     required this.delay,
+    this.isFolderSection = false,
+    this.addFolder,
   });
 
   @override
@@ -386,13 +398,28 @@ class _AnimatedSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            if (isFolderSection)
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                minSize: 1,
+                onPressed: addFolder,
+                child: const Icon(
+                  CupertinoIcons.add,
+                  color: AppColors.primary,
+                ),
+              ),
+          ],
         ),
         const SizedBox(height: 16),
         ClipRRect(

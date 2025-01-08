@@ -45,8 +45,8 @@ class FoldersList extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 50,
-                mainAxisExtent: 120,
+                childAspectRatio: 1,
+               
                 mainAxisSpacing: 8,
                 crossAxisCount: 3,
                 crossAxisSpacing: 3,
@@ -75,6 +75,7 @@ class FolderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoButton(
       padding: EdgeInsets.zero,
+      minSize: 1,
       onPressed: () {
         if (folder.havePassword) {
           getItService.navigatorService.onInfoPassword(
