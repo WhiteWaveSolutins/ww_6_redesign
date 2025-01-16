@@ -1,11 +1,16 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:scan_doc/data/models/folder.dart';
 import 'package:scan_doc/data/services/shared_preferences_service.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:scan_doc/ui/state_manager/store.dart';
+import 'package:scan_doc/ui/state_manager/subscription/state.dart';
+import 'package:scan_doc/ui/widgets/box_premium.dart';
 import 'package:scan_doc/ui/widgets/toast/app_toast.dart';
 
 class AddFolderModal extends StatefulWidget {
@@ -115,32 +120,54 @@ class _AddFolderModalState extends State<AddFolderModal> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: isLoading ? null : save,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                     color: AppColors.primary,
+                StoreConnector<AppState, SubscriptionState>(
+                  converter: (store) => store.state.subscriptionState,
+                  builder: (context, state) {
+                    final isPremium = !state.hasPremium && folder > 3;
+                    final content = CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: isLoading
+                          ? null
+                          : isPremium
+                              ? getItService.navigatorService.onGetPremium
+                              : save,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: !isPremium ? AppColors.primary : Colors.transparent,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: isLoading
+                            ? const CupertinoActivityIndicator(
+                                color: AppColors.textPrimary,
+                                radius: 8,
+                              )
+                            : const Text(
+                                'Save',
+                                style: TextStyle(
+                                  color: AppColors.textPrimary,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                      ),
+                    );
+                    if (!isPremium) return content;
+                    return ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: isLoading
-                        ? const CupertinoActivityIndicator(
-                            color: AppColors.textPrimary,
-                            radius: 8,
-                          )
-                        : const Text(
-                            'Save',
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                  ),
+                      child: SizedBox(
+                        height: 35,
+                        width: 65,
+                        child: BoxPremium(
+                          height: 20,
+                          child: content,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -152,35 +179,58 @@ class _AddFolderModalState extends State<AddFolderModal> {
             child: CarouselSlider(
               items: [
                 for (int i = 0; i < 9; i++)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceDark.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: AppColors.primaryGrad1.withOpacity(0.1),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.surfaceDark.withOpacity(0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+                  StoreConnector<AppState, SubscriptionState>(
+                    converter: (store) => store.state.subscriptionState,
+                    builder: (context, state) {
+                      final isPremium = i > 2 && !state.hasPremium;
+                      final content = Container(
+                        padding: const EdgeInsets.all(25),
+                        child: Image.asset(
+                          'assets/images/folders/folder${i + 1}.png',
+                          width: 100,
+                          height: 100,
                         ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Container(
-                          padding: const EdgeInsets.all(25),
-                          child: Image.asset(
-                            'assets/images/folders/folder${i + 1}.png',
-                            width: 100,
-                            height: 100,
+                      );
+                      if (isPremium) {
+                        return BoxPremium(
+                          height: 100,
+                          width: 100,
+                          radiusDots: 60,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: AppColors.primaryGrad1.withOpacity(0.1),
+                              ),
+                            ),
+                            child: content,
+                          ),
+                        );
+                      }
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceDark.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: AppColors.primaryGrad1.withOpacity(0.1),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.surfaceDark.withOpacity(0.2),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: content,
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
               ],
               options: CarouselOptions(
@@ -235,72 +285,90 @@ class _AddFolderModalState extends State<AddFolderModal> {
                 ),
                 const SizedBox(height: 20),
                 // Password Toggle
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceDark.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppColors.primaryGrad1.withOpacity(0.1),
+                StoreConnector<AppState, SubscriptionState>(
+                  converter: (store) => store.state.subscriptionState,
+                  builder: (context, state) {
+                    final content = ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: state.hasPremium ? 10 : 0,
+                          sigmaY: state.hasPremium ? 10 : 0,
                         ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: state.hasPremium ? AppColors.surfaceDark.withOpacity(0.5) : null,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: AppColors.primaryGrad1.withOpacity(0.1),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                 color: AppColors.primary,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: const Icon(
-                                  CupertinoIcons.lock_shield_fill,
-                                  color: AppColors.textPrimary,
-                                  size: 20,
-                                ),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Icon(
+                                      CupertinoIcons.lock_shield_fill,
+                                      color: AppColors.textPrimary,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Text(
+                                    'Password Protection',
+                                    style: TextStyle(
+                                      color: AppColors.textPrimary,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 12),
-                              const Text(
-                                'Password Protection',
-                                style: TextStyle(
-                                  color: AppColors.textPrimary,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                              CupertinoSwitch(
+                                activeColor: AppColors.primaryGrad1,
+                                trackColor: AppColors.surfaceLight.withOpacity(0.2),
+                                value: usePassword,
+                                onChanged: (_) async {
+                                  if (!state.hasPremium) {
+                                    getItService.navigatorService.onGetPremium();
+                                    return;
+                                  }
+                                  if (!usePassword) {
+                                    final password = await SharedPreferencesService.getPassword();
+                                    if (password == null) {
+                                      getItService.navigatorService.onInfoPassword(
+                                        onOpen: () {
+                                          setState(() => usePassword = true);
+                                          Navigator.of(context).pop();
+                                        },
+                                      );
+                                      return;
+                                    }
+                                  }
+                                  setState(() => usePassword = !usePassword);
+                                },
                               ),
                             ],
                           ),
-                          CupertinoSwitch(
-                            activeColor: AppColors.primaryGrad1,
-                            trackColor: AppColors.surfaceLight.withOpacity(0.2),
-                            value: usePassword,
-                            onChanged: (_) async {
-                              if (!usePassword) {
-                                final password = await SharedPreferencesService
-                                    .getPassword();
-                                if (password == null) {
-                                  getItService.navigatorService.onInfoPassword(
-                                    onOpen: () {
-                                      setState(() => usePassword = true);
-                                      Navigator.of(context).pop();
-                                    },
-                                  );
-                                  return;
-                                }
-                              }
-                              setState(() => usePassword = !usePassword);
-                            },
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                    if (state.hasPremium) return content;
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: BoxPremium(
+                        child: content,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

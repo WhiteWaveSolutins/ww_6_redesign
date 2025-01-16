@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +45,6 @@ class FoldersList extends StatelessWidget {
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 childAspectRatio: 1,
-               
                 mainAxisSpacing: 8,
                 crossAxisCount: 3,
                 crossAxisSpacing: 3,
@@ -108,9 +106,7 @@ class FolderCard extends StatelessWidget {
           StoreConnector<AppState, DocumentListState>(
             converter: (store) => store.state.documentListState,
             builder: (context, state) {
-              final count = state.documents
-                  .where((e) => e.folders.contains(folder.id))
-                  .toList();
+              final count = state.documents.where((e) => e.folders.contains(folder.id)).toList();
               return Text(
                 state.isLoading || state.isError
                     ? ''
@@ -145,8 +141,7 @@ class EmptyFoldersState extends StatefulWidget {
   State<EmptyFoldersState> createState() => _EmptyFoldersStateState();
 }
 
-class _EmptyFoldersStateState extends State<EmptyFoldersState>
-    with TickerProviderStateMixin {
+class _EmptyFoldersStateState extends State<EmptyFoldersState> with TickerProviderStateMixin {
   late AnimationController _mainController;
   late AnimationController _rotationController;
   late AnimationController _bounceController;
@@ -281,12 +276,8 @@ class _EmptyFoldersStateState extends State<EmptyFoldersState>
                     builder: (context, child) {
                       final particle = _particles[index];
                       final offset = Offset(
-                        math.cos(particle.angle) *
-                            particle.radius *
-                            _scaleAnimation.value,
-                        math.sin(particle.angle) *
-                            particle.radius *
-                            _scaleAnimation.value,
+                        math.cos(particle.angle) * particle.radius * _scaleAnimation.value,
+                        math.sin(particle.angle) * particle.radius * _scaleAnimation.value,
                       );
 
                       return Transform.translate(
@@ -325,8 +316,7 @@ class _EmptyFoldersStateState extends State<EmptyFoldersState>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color:
-                                primaryColor.withOpacity(_glowAnimation.value),
+                            color: primaryColor.withOpacity(_glowAnimation.value),
                             blurRadius: 30,
                             spreadRadius: 10,
                           ),
@@ -361,9 +351,7 @@ class _EmptyFoldersStateState extends State<EmptyFoldersState>
                               ),
                             ),
                             child: Icon(
-                              widget.isSearch
-                                  ? CupertinoIcons.search
-                                  : CupertinoIcons.folder_fill,
+                              widget.isSearch ? CupertinoIcons.search : CupertinoIcons.folder_fill,
                               color: primaryColor,
                               size: 30,
                             ),

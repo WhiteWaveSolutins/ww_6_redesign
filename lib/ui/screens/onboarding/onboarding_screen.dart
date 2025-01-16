@@ -1,18 +1,22 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
+import 'package:scan_doc/ui/state_manager/store.dart';
+import 'package:scan_doc/ui/state_manager/subscription/action.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
+
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen>
-    with SingleTickerProviderStateMixin {
+class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController();
   late AnimationController _animController;
   int _currentPage = 0;
@@ -36,8 +40,16 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       emoji: '✏️',
       title: 'Editing\ndocuments',
       subtitle: 'Change filters, add text and captions and more',
-     color: AppColors.primary,
+      color: AppColors.primary,
       animation: _buildRotateAnimation,
+    ),
+    const OnboardingPage(
+      emoji: '🚀',
+      title: 'Unlimited\naccess',
+      subtitle: 'Try 3 days free, Then \$4.99/week',
+      color: AppColors.primary,
+      finish: true,
+      animation: _buildFloatingAnimation,
     ),
   ];
 
@@ -57,16 +69,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     super.dispose();
   }
 
-  static Widget _buildFloatingAnimation(
-      Animation<double> animation, Widget child) {
+  static Widget _buildFloatingAnimation(Animation<double> animation, Widget child) {
     return Transform.translate(
       offset: Offset(0, 20 * animation.value),
       child: child,
     );
   }
 
-  static Widget _buildPulseAnimation(
-      Animation<double> animation, Widget child) {
+  static Widget _buildPulseAnimation(Animation<double> animation, Widget child) {
     return Transform.scale(
       scale: 0.8 + (0.4 * animation.value),
       child: Opacity(
@@ -76,8 +86,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
   }
 
-  static Widget _buildRotateAnimation(
-      Animation<double> animation, Widget child) {
+  static Widget _buildRotateAnimation(Animation<double> animation, Widget child) {
     return Transform.rotate(
       angle: 0.1 * animation.value,
       child: Transform.scale(
@@ -107,80 +116,148 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             left: 0,
             right: 0,
             bottom: 0,
-            child: _buildBottomControls(),
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  padding:
+                      EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(context).padding.bottom + 24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _PageIndicator(
+                        count: _pages.length,
+                        currentPage: _currentPage,
+                        activeColor: _pages[_currentPage].color,
+                      ),
+                      const SizedBox(height: 24),
+                      GradientButton(
+                        onPressed: () {
+                          if (_currentPage < _pages.length - 1) {
+                            _pageController.nextPage(
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeOutCubic,
+                            );
+                          } else {
+                            final store = StoreProvider.of<AppState>(context, listen: false);
+                            final productId = store.state.paywallListState.paywalls.first.productId;
+                            store.dispatch(
+                              PurchaseSubscriptionAction(
+                                onFinish: getItService.navigatorService.onMain,
+                                onError: (e) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => CupertinoAlertDialog(
+                                      title: const Text("Some Error"),
+                                      content: Text(e),
+                                      actions: <Widget>[
+                                        CupertinoDialogAction(
+                                          onPressed: Navigator.of(context).pop,
+                                          isDefaultAction: true,
+                                          child: const Text(
+                                            "Ok",
+                                            style: TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                onLoad: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => const Center(
+                                      child: CupertinoActivityIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                productId: productId,
+                              ),
+                            );
+                          }
+                        },
+                        gradient: LinearGradient(
+                          colors: [
+                            _pages[_currentPage].color,
+                            _pages[_currentPage].color.withOpacity(0.8),
+                          ],
+                        ),
+                        child: Text(
+                          _currentPage == _pages.length - 1 ? 'Try free & subscribe' : 'Continue',
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            color: CupertinoColors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          TextButtonOnbg(
+                            text: 'Terms of Use',
+                            onTap: () => launchUrl(
+                              Uri.parse(getItService.configService.termsLink),
+                              mode: LaunchMode.inAppWebView,
+                            ),
+                          ),
+                          TextButtonOnbg(
+                            text: 'Privacy Policy',
+                            onTap: () => launchUrl(
+                              Uri.parse(getItService.configService.privacyLink),
+                              mode: LaunchMode.inAppWebView,
+                            ),
+                          ),
+                          TextButtonOnbg(
+                            text: 'Restore',
+                            onTap: () {
+                              final store = StoreProvider.of<AppState>(context, listen: false);
+                              store.dispatch(RestoreSubscriptionAction(
+                                onFinish: Navigator.of(context).pop,
+                                onError: (e) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => CupertinoAlertDialog(
+                                      title: const Text("Some Error"),
+                                      content: Text(e),
+                                      actions: <Widget>[
+                                        CupertinoDialogAction(
+                                          onPressed: Navigator.of(context).pop,
+                                          isDefaultAction: true,
+                                          child: const Text(
+                                            "Ok",
+                                            style: TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                onLoad: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => const Center(
+                                      child: CupertinoActivityIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ));
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomControls() {
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(
-              24, 24, 24, MediaQuery.of(context).padding.bottom + 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _PageIndicator(
-                count: _pages.length,
-                currentPage: _currentPage,
-                activeColor: _pages[_currentPage].color,
-              ),
-              const SizedBox(height: 24),
-              _GradientButton(
-                onPressed: () {
-                  if (_currentPage < _pages.length - 1) {
-                    _pageController.nextPage(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeOutCubic,
-                    );
-                  } else {
-                    getItService.navigatorService.onMain();
-                  }
-                },
-                gradient: LinearGradient(
-                  colors: [
-                    _pages[_currentPage].color,
-                    _pages[_currentPage].color.withOpacity(0.8),
-                  ],
-                ),
-                child: Text(
-                  _currentPage == _pages.length - 1
-                      ? 'Get Started'
-                      : 'Continue',
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                    color: CupertinoColors.white,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _TextButton(
-                    text: 'Terms of Use',
-                    onTap: () => launchUrl(
-                      Uri.parse(getItService.configService.termsLink),
-                      mode: LaunchMode.inAppWebView,
-                    ),
-                  ),
-                  _TextButton(
-                    text: 'Privacy Policy',
-                    onTap: () => launchUrl(
-                      Uri.parse(getItService.configService.privacyLink),
-                      mode: LaunchMode.inAppWebView,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -189,6 +266,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 class OnboardingPage {
   final String emoji;
   final String title;
+  final bool finish;
   final String subtitle;
   final Color color;
   final Widget Function(Animation<double>, Widget) animation;
@@ -196,6 +274,7 @@ class OnboardingPage {
   const OnboardingPage({
     required this.emoji,
     required this.title,
+    this.finish = false,
     required this.subtitle,
     required this.color,
     required this.animation,
@@ -260,11 +339,30 @@ class _OnboardingPageView extends StatelessWidget {
   }
 
   Widget _buildSubtitle() {
-    return Text(
-      page.subtitle,
-      style:
-          const TextStyle(fontSize: 17, height: 1.4, color: AppColors.textSecondary),
-      textAlign: TextAlign.center,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          page.subtitle,
+          style: const TextStyle(fontSize: 17, height: 1.4, color: AppColors.textSecondary),
+          textAlign: TextAlign.center,
+        ),
+        if (page.finish) ...[
+          GestureDetector(
+            onTap: getItService.navigatorService.onMain,
+            child: const Text(
+              'Or proceed with limited version',
+              style: TextStyle(
+                fontSize: 17,
+                height: 1.4,
+                color: AppColors.textSecondary,
+                decoration: TextDecoration.underline,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -355,12 +453,12 @@ class _PageIndicator extends StatelessWidget {
   }
 }
 
-class _GradientButton extends StatelessWidget {
+class GradientButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Gradient gradient;
   final Widget child;
 
-  const _GradientButton({
+  const GradientButton({super.key,
     required this.onPressed,
     required this.gradient,
     required this.child,
@@ -395,11 +493,11 @@ class _GradientButton extends StatelessWidget {
   }
 }
 
-class _TextButton extends StatelessWidget {
+class TextButtonOnbg extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
 
-  const _TextButton({
+  const TextButtonOnbg({super.key,
     required this.text,
     required this.onTap,
   });

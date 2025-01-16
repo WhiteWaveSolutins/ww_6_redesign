@@ -1,6 +1,5 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:scan_doc/ui/resurses/text.dart';
 
 class FilterButton extends StatelessWidget {

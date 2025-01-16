@@ -12,7 +12,7 @@ final cropEditor = CustomWidgetsCropRotateEditor(
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 30),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.surfaceDark,
             ),
             child: Row(

@@ -76,7 +76,7 @@ class DocumentsGrid extends StatelessWidget {
                   ),
                 ),
               );
-            }).toList(),
+            }),
             // Кнопка добавления с уникальным ключом
             CustomDraggable(
               key: const ValueKey('add_button'),

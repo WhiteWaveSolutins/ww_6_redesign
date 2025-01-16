@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -8,11 +7,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 
-import 'package:scan_doc/ui/resurses/images.dart';
 
 import 'package:scan_doc/ui/screens/costomize_document/widgets/costomize_widget.dart';
 import 'package:scan_doc/ui/screens/costomize_document/widgets/crop_editor.dart';
-import 'package:scan_doc/ui/screens/costomize_document/widgets/filter_editor.dart';
 import 'package:scan_doc/ui/screens/costomize_document/widgets/sticker_editor.dart';
 
 class CustomizeDocumentScreen extends StatelessWidget {

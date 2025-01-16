@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:scan_doc/data/models/folder.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';

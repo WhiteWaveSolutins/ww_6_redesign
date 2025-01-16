@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
+import 'package:scan_doc/ui/screens/onboarding/onboarding_screen.dart';
+import 'package:scan_doc/ui/state_manager/store.dart';
+import 'package:scan_doc/ui/state_manager/subscription/state.dart';
+import 'package:scan_doc/ui/widgets/box_premium.dart';
 
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -18,8 +23,7 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen>
-    with SingleTickerProviderStateMixin {
+class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProviderStateMixin {
   final _configService = getItService.configService;
   late AnimationController _animController;
 
@@ -66,24 +70,94 @@ class _SettingsScreenState extends State<SettingsScreen>
               sliver: SliverList(
                 delegate: SliverChildListDelegate(
                   [
+                    StoreConnector<AppState, SubscriptionState>(
+                      converter: (store) => store.state.subscriptionState,
+                      builder: (context, state) {
+                        if (state.hasPremium) return const SizedBox();
+                        return Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: AppColors.primary.withOpacity(0.3),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Row(
+                                    children: [
+                                      Text(
+                                        'Unlock new Features!',
+                                        style: TextStyle(
+                                          color: AppColors.textPrimary,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      SizedBox(width: 16),
+                                      Icon(
+                                        CupertinoIcons.star_fill,
+                                        color: AppColors.primary,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  GradientButton(
+                                    onPressed: getItService.navigatorService.onGetPremium,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        AppColors.primary,
+                                        AppColors.primary.withOpacity(0.8),
+                                      ],
+                                    ),
+                                    child: const Text(
+                                      'Get Premium',
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                        color: CupertinoColors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 30),
+                          ],
+                        );
+                      },
+                    ),
                     _buildSettingsGroup(
                       title: 'Security',
                       items: [
-                        _buildSettingsTile(
-                          icon: CupertinoIcons.lock_shield_fill,
-                          title: 'Password',
-                          color: AppColors.info,
-                          onTap: () =>
-                              getItService.navigatorService.onInfoPassword(
-                            onOpen:
-                                getItService.navigatorService.onSettingPassword,
-                          ),
+                        StoreConnector<AppState, SubscriptionState>(
+                          converter: (store) => store.state.subscriptionState,
+                          builder: (context, state) {
+                            final password = _buildSettingsTile(
+                              icon: CupertinoIcons.lock_shield_fill,
+                              title: 'Password',
+                              color: AppColors.info,
+                              onTap: state.hasPremium
+                                  ? () => getItService.navigatorService.onInfoPassword(
+                                        onOpen: getItService.navigatorService.onSettingPassword,
+                                      )
+                                  : getItService.navigatorService.onGetPremium,
+                            );
+                            if (state.hasPremium) return password;
+                            return BoxPremium(
+                              countDots: 100,
+                              radiusDots: 150,
+                              child: password,
+                            );
+                          },
                         ),
                       ],
-                    )
-                        .animate()
-                        .fadeIn(delay: 200.ms)
-                        .slideY(begin: 0.2, end: 0),
+                    ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
                     const SizedBox(height: 16),
                     _buildSettingsGroup(
                       title: 'Legal',
@@ -92,21 +166,16 @@ class _SettingsScreenState extends State<SettingsScreen>
                           icon: CupertinoIcons.doc_text_fill,
                           title: 'Terms of Use',
                           color: AppColors.success,
-                          onTap: () =>
-                              launchUrlString(_configService.termsLink),
+                          onTap: () => launchUrlString(_configService.termsLink),
                         ),
                         _buildSettingsTile(
                           icon: CupertinoIcons.shield_fill,
                           title: 'Privacy Policy',
                           color: AppColors.secondary,
-                          onTap: () =>
-                              launchUrlString(_configService.privacyLink),
+                          onTap: () => launchUrlString(_configService.privacyLink),
                         ),
                       ],
-                    )
-                        .animate()
-                        .fadeIn(delay: 400.ms)
-                        .slideY(begin: 0.2, end: 0),
+                    ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2, end: 0),
                     const SizedBox(height: 16),
                     _buildSettingsGroup(
                       title: 'About',
@@ -140,10 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                           onTap: () => InAppReview.instance.requestReview(),
                         ),
                       ],
-                    )
-                        .animate()
-                        .fadeIn(delay: 600.ms)
-                        .slideY(begin: 0.2, end: 0),
+                    ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.2, end: 0),
                     const SizedBox(height: 24),
                   ],
                 ),

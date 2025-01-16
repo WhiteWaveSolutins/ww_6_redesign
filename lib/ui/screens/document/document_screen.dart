@@ -108,7 +108,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
           title: const Text(
             'Do you really want to get out?',
             style: TextStyle(
-              color: AppColors.textPrimary,
+              color: Colors.black,
               fontSize: 17,
               fontWeight: FontWeight.w600,
             ),
@@ -116,7 +116,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
           content: const Text(
             'The current file will not be saved',
             style: TextStyle(
-              color: AppColors.textPrimary,
+              color: Colors.black,
               fontSize: 15,
             ),
           ),

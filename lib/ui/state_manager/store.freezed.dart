@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AppState {
   FolderListState get folderListState => throw _privateConstructorUsedError;
   DocumentListState get documentListState => throw _privateConstructorUsedError;
+  SubscriptionState get subscriptionState => throw _privateConstructorUsedError;
+  PaywallListState get paywallListState => throw _privateConstructorUsedError;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -32,10 +34,15 @@ abstract class $AppStateCopyWith<$Res> {
       _$AppStateCopyWithImpl<$Res, AppState>;
   @useResult
   $Res call(
-      {FolderListState folderListState, DocumentListState documentListState});
+      {FolderListState folderListState,
+      DocumentListState documentListState,
+      SubscriptionState subscriptionState,
+      PaywallListState paywallListState});
 
   $FolderListStateCopyWith<$Res> get folderListState;
   $DocumentListStateCopyWith<$Res> get documentListState;
+  $SubscriptionStateCopyWith<$Res> get subscriptionState;
+  $PaywallListStateCopyWith<$Res> get paywallListState;
 }
 
 /// @nodoc
@@ -55,6 +62,8 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
   $Res call({
     Object? folderListState = null,
     Object? documentListState = null,
+    Object? subscriptionState = null,
+    Object? paywallListState = null,
   }) {
     return _then(_value.copyWith(
       folderListState: null == folderListState
@@ -65,6 +74,14 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
           ? _value.documentListState
           : documentListState // ignore: cast_nullable_to_non_nullable
               as DocumentListState,
+      subscriptionState: null == subscriptionState
+          ? _value.subscriptionState
+          : subscriptionState // ignore: cast_nullable_to_non_nullable
+              as SubscriptionState,
+      paywallListState: null == paywallListState
+          ? _value.paywallListState
+          : paywallListState // ignore: cast_nullable_to_non_nullable
+              as PaywallListState,
     ) as $Val);
   }
 
@@ -87,6 +104,26 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
       return _then(_value.copyWith(documentListState: value) as $Val);
     });
   }
+
+  /// Create a copy of AppState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $SubscriptionStateCopyWith<$Res> get subscriptionState {
+    return $SubscriptionStateCopyWith<$Res>(_value.subscriptionState, (value) {
+      return _then(_value.copyWith(subscriptionState: value) as $Val);
+    });
+  }
+
+  /// Create a copy of AppState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PaywallListStateCopyWith<$Res> get paywallListState {
+    return $PaywallListStateCopyWith<$Res>(_value.paywallListState, (value) {
+      return _then(_value.copyWith(paywallListState: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -98,12 +135,19 @@ abstract class _$$AppStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {FolderListState folderListState, DocumentListState documentListState});
+      {FolderListState folderListState,
+      DocumentListState documentListState,
+      SubscriptionState subscriptionState,
+      PaywallListState paywallListState});
 
   @override
   $FolderListStateCopyWith<$Res> get folderListState;
   @override
   $DocumentListStateCopyWith<$Res> get documentListState;
+  @override
+  $SubscriptionStateCopyWith<$Res> get subscriptionState;
+  @override
+  $PaywallListStateCopyWith<$Res> get paywallListState;
 }
 
 /// @nodoc
@@ -121,6 +165,8 @@ class __$$AppStateImplCopyWithImpl<$Res>
   $Res call({
     Object? folderListState = null,
     Object? documentListState = null,
+    Object? subscriptionState = null,
+    Object? paywallListState = null,
   }) {
     return _then(_$AppStateImpl(
       folderListState: null == folderListState
@@ -131,6 +177,14 @@ class __$$AppStateImplCopyWithImpl<$Res>
           ? _value.documentListState
           : documentListState // ignore: cast_nullable_to_non_nullable
               as DocumentListState,
+      subscriptionState: null == subscriptionState
+          ? _value.subscriptionState
+          : subscriptionState // ignore: cast_nullable_to_non_nullable
+              as SubscriptionState,
+      paywallListState: null == paywallListState
+          ? _value.paywallListState
+          : paywallListState // ignore: cast_nullable_to_non_nullable
+              as PaywallListState,
     ));
   }
 }
@@ -139,16 +193,23 @@ class __$$AppStateImplCopyWithImpl<$Res>
 
 class _$AppStateImpl implements _AppState {
   const _$AppStateImpl(
-      {required this.folderListState, required this.documentListState});
+      {required this.folderListState,
+      required this.documentListState,
+      required this.subscriptionState,
+      required this.paywallListState});
 
   @override
   final FolderListState folderListState;
   @override
   final DocumentListState documentListState;
+  @override
+  final SubscriptionState subscriptionState;
+  @override
+  final PaywallListState paywallListState;
 
   @override
   String toString() {
-    return 'AppState(folderListState: $folderListState, documentListState: $documentListState)';
+    return 'AppState(folderListState: $folderListState, documentListState: $documentListState, subscriptionState: $subscriptionState, paywallListState: $paywallListState)';
   }
 
   @override
@@ -159,12 +220,16 @@ class _$AppStateImpl implements _AppState {
             (identical(other.folderListState, folderListState) ||
                 other.folderListState == folderListState) &&
             (identical(other.documentListState, documentListState) ||
-                other.documentListState == documentListState));
+                other.documentListState == documentListState) &&
+            (identical(other.subscriptionState, subscriptionState) ||
+                other.subscriptionState == subscriptionState) &&
+            (identical(other.paywallListState, paywallListState) ||
+                other.paywallListState == paywallListState));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, folderListState, documentListState);
+  int get hashCode => Object.hash(runtimeType, folderListState,
+      documentListState, subscriptionState, paywallListState);
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -178,12 +243,18 @@ class _$AppStateImpl implements _AppState {
 abstract class _AppState implements AppState {
   const factory _AppState(
       {required final FolderListState folderListState,
-      required final DocumentListState documentListState}) = _$AppStateImpl;
+      required final DocumentListState documentListState,
+      required final SubscriptionState subscriptionState,
+      required final PaywallListState paywallListState}) = _$AppStateImpl;
 
   @override
   FolderListState get folderListState;
   @override
   DocumentListState get documentListState;
+  @override
+  SubscriptionState get subscriptionState;
+  @override
+  PaywallListState get paywallListState;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.

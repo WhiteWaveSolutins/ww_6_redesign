@@ -5,6 +5,7 @@ import 'package:scan_doc/data/database/database.dart';
 import 'package:scan_doc/data/repositories/local_document_repository.dart';
 import 'package:scan_doc/data/repositories/local_folder_repository.dart';
 import 'package:scan_doc/data/services/config_service.dart';
+import 'package:scan_doc/data/services/subscription_service.dart';
 import 'package:scan_doc/domain/repositories/document_repository.dart';
 import 'package:scan_doc/domain/repositories/folder_repository.dart';
 import 'package:scan_doc/domain/services/navigator_service.dart';
@@ -14,8 +15,12 @@ import 'package:scan_doc/ui/state_manager/document/middleware.dart';
 import 'package:scan_doc/ui/state_manager/document/state.dart';
 import 'package:scan_doc/ui/state_manager/folder/middleware.dart';
 import 'package:scan_doc/ui/state_manager/folder/state.dart';
+import 'package:scan_doc/ui/state_manager/paywall/middleware.dart';
+import 'package:scan_doc/ui/state_manager/paywall/state.dart';
 import 'package:scan_doc/ui/state_manager/reduser.dart';
 import 'package:scan_doc/ui/state_manager/store.dart';
+import 'package:scan_doc/ui/state_manager/subscription/middleware.dart';
+import 'package:scan_doc/ui/state_manager/subscription/state.dart';
 
 class LocatorService {
   final navigatorKey = GlobalKey<NavigatorState>();
@@ -31,6 +36,7 @@ class LocatorService {
 
   late Store<AppState> store;
   final configService = ConfigService();
+  late SubscriptionService subscriptionService;
 
   init() {
     navigatorService = NavigatorService(navigatorKey: navigatorKey);
@@ -38,15 +44,21 @@ class LocatorService {
     folderRepository = LocalFolderRepository(database: database);
     documentRepository = LocalDocumentRepository(database: database);
 
+    subscriptionService = SubscriptionService(configService: configService);
+
     store = Store(
       appReducer,
       initialState: AppState(
         folderListState: FolderListState(),
         documentListState: DocumentListState(),
+        subscriptionState: SubscriptionState(),
+        paywallListState: PaywallListState(),
       ),
       middleware: [
         FolderMiddleware(folderRepository: folderRepository).call,
         DocumentMiddleware(documentRepository: documentRepository).call,
+        SubscriptionMiddleware(subscriptionService: subscriptionService).call,
+        PaywallMiddleware(subscriptionService: subscriptionService).call,
       ],
     );
 
