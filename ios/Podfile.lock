@@ -1,8 +1,8 @@
 PODS:
-  - apphud (2.6.0):
-    - ApphudSDK (= 3.5.6)
+  - apphud (2.5.0):
+    - ApphudSDK (= 3.4.0)
     - Flutter
-  - ApphudSDK (3.5.6)
+  - ApphudSDK (3.4.0)
   - cunning_document_scanner (1.0.0):
     - Flutter
   - device_info_plus (0.0.1):
@@ -40,20 +40,21 @@ PODS:
   - sqflite_darwin (0.0.4):
     - Flutter
     - FlutterMacOS
-  - sqlite3 (3.47.0):
-    - sqlite3/common (= 3.47.0)
-  - sqlite3/common (3.47.0)
-  - sqlite3/dbstatvtab (3.47.0):
+  - sqlite3 (3.47.2):
+    - sqlite3/common (= 3.47.2)
+  - sqlite3/common (3.47.2)
+  - sqlite3/dbstatvtab (3.47.2):
     - sqlite3/common
-  - sqlite3/fts5 (3.47.0):
+  - sqlite3/fts5 (3.47.2):
     - sqlite3/common
-  - sqlite3/perf-threadsafe (3.47.0):
+  - sqlite3/perf-threadsafe (3.47.2):
     - sqlite3/common
-  - sqlite3/rtree (3.47.0):
+  - sqlite3/rtree (3.47.2):
     - sqlite3/common
   - sqlite3_flutter_libs (0.0.1):
     - Flutter
-    - sqlite3 (~> 3.47.0)
+    - FlutterMacOS
+    - sqlite3 (~> 3.47.2)
     - sqlite3/dbstatvtab
     - sqlite3/fts5
     - sqlite3/perf-threadsafe
@@ -82,7 +83,7 @@ DEPENDENCIES:
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
-  - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/ios`)
+  - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - vibration (from `.symlinks/plugins/vibration/ios`)
 
@@ -129,24 +130,24 @@ EXTERNAL SOURCES:
   sqflite_darwin:
     :path: ".symlinks/plugins/sqflite_darwin/darwin"
   sqlite3_flutter_libs:
-    :path: ".symlinks/plugins/sqlite3_flutter_libs/ios"
+    :path: ".symlinks/plugins/sqlite3_flutter_libs/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   vibration:
     :path: ".symlinks/plugins/vibration/ios"
 
 SPEC CHECKSUMS:
-  apphud: b79ba09d8356e4a2f5a77ff52769352e3ca96a83
-  ApphudSDK: e1c9098e9b686ae240cd3a97738d305ebe97c6e9
+  apphud: df0e55145d223c5d818aed5d48f3dd8c5365ee63
+  ApphudSDK: c8989de464bc45c382e132b750851d720377a2f1
   cunning_document_scanner: 7cb9bd173f7cc7b11696dde98d01492187fc3a67
   device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
   emoji_picker_flutter: fe2e6151c5b548e975d546e6eeb567daf0962a58
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_email_sender: 10a22605f92809a11ef52b2f412db806c6082d40
-  flutter_native_splash: e8a1e01082d97a8099d973f919f57904c925008a
+  flutter_native_splash: f71420956eb811e6d310720fee915f1d42852e7a
   flutter_open_app_settings: 4b43abd61edc27ee4b6bee2dbc5ccc9033861d0f
   flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
-  gaimon: 7688c586f38dcc4782e6fe26f648057d280a9d8b
+  gaimon: 266fec2cd27726df54a6694c14fc9e3f2a415c33
   in_app_review: a31b5257259646ea78e0e35fc914979b0031d011
   local_auth_darwin: 66e40372f1c29f383a314c738c7446e2f7fdadc3
   package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
@@ -155,8 +156,8 @@ SPEC CHECKSUMS:
   share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
-  sqlite3: 0aa20658a9b238a3b1ff7175eb7bdd863b0ab4fd
-  sqlite3_flutter_libs: b55ef23cfafea5318ae5081e0bf3fbbce8417c94
+  sqlite3: 7559e33dae4c78538df563795af3a86fc887ee71
+  sqlite3_flutter_libs: 58ae36c0dd086395d066b4fe4de9cdca83e717b3
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   vibration: 7d883d141656a1c1a6d8d238616b2042a51a1241
 
